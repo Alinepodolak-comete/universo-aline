@@ -589,14 +589,14 @@
 
   <!-- AGENDA -->
   <section class="tab" id="tab-agenda">
-    <div class="greet"><div><h2 style="color:var(--wine)">Agenda</h2><div class="sub">Prazos de marca puxados sozinhos + o que você adicionar.</div></div></div>
+    <div class="greet"><div><h2 style="color:var(--wine)">Agenda</h2></div></div>
     <div class="card">
       <div class="calnav">
         <button onclick="calMudarMes(-1)">‹</button>
         <span id="calMesLabel" class="cap">—</span>
         <button onclick="calMudarMes(1)">›</button>
       </div>
-      <div id="calendarioGrid"></div>
+      <div id="calendarioGrid" class="calgrid"></div>
       <div id="calDiaDetalhe" class="calDiaDetalhe"></div>
     </div>
     <div class="card">
