@@ -10,13 +10,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
-    --bg:#F6EDE5;--card:#FFFCF9;--wine:#6E3B47;--wine-2:#824A56;--rose:#B27381;
-    --rose-soft:#F0E1E2;--gold:#BE9A4F;--ink:#4A3540;--muted:#9C8790;--line:#EBDBD0;
-    --sage:#8FA890;--sage-soft:#E7F0E8;--lav:#8973A6;--lav-soft:#EDE7F3;--shadow:0 8px 26px rgba(110,59,71,.10);
+    --bg:#F8E9DA;--card:#FFFCF7;--wine:#7A4A44;--wine-2:#93594E;--rose:#D9A08E;
+    --rose-soft:#F5E1D3;--gold:#C99A5B;--ink:#4A3833;--muted:#A0897E;--line:#EDDCC9;
+    --sage:#8FA890;--sage-soft:#E7F0E8;--lav:#8973A6;--lav-soft:#EDE7F3;--shadow:0 8px 26px rgba(122,74,68,.12);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0}
-  body{background:linear-gradient(180deg,#FAF3EC 0%,#F6EDE5 40%,#F3E6DC 100%);color:var(--ink);font-family:-apple-system,"Poppins",system-ui,sans-serif;
+  body{background:linear-gradient(180deg,#FBF1E5 0%,#F8E9DA 40%,#F5DFCB 100%);color:var(--ink);font-family:-apple-system,"Poppins",system-ui,sans-serif;
     font-weight:400;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
   .app{max-width:520px;margin:0 auto;min-height:100vh;padding:0 18px 112px;position:relative}
   h1,h2,h3{font-family:Georgia,"Fraunces",serif;font-weight:400;margin:0;letter-spacing:.01em}
@@ -189,6 +189,20 @@
   .urgencia.atencao{background:#F3E9D6;color:#A9862F}
   .urgencia.atrasado{background:#F6E1E1;color:#B5595E}
 
+  .calnav{display:flex;align-items:center;justify-content:center;gap:18px;margin-bottom:12px}
+  .calnav button{background:none;border:none;color:var(--wine);font-size:17px;cursor:pointer;padding:4px 8px}
+  .calnav .cap{font-family:Georgia,serif;font-size:15px;color:var(--wine);text-transform:capitalize;min-width:130px;text-align:center}
+  .calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+  .calhead{font-size:10px;color:var(--muted);padding:4px 0;font-weight:500}
+  .calday{position:relative;padding:8px 0;font-size:12.5px;color:var(--ink);border-radius:9px;cursor:pointer}
+  .calday:hover{background:#F6EDE5}
+  .calday.empty{cursor:default}
+  .calday.empty:hover{background:none}
+  .calday.today{background:var(--wine);color:#fff;font-weight:600}
+  .caldot{position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--rose)}
+  .calday.today .caldot{background:#fff}
+  .calDiaDetalhe{margin-top:12px;border-top:1px solid var(--line);padding-top:10px}
+
   /* próxima tarefa (destaque) */
   .nexttask{background:linear-gradient(155deg,var(--wine),var(--wine-2));border-radius:18px;padding:16px 17px;
     margin-top:14px;color:#fff}
@@ -347,6 +361,9 @@
   }
   .mainicons{display:none;justify-content:flex-end;gap:14px;padding:22px 2px 0}
   .mainicons svg{width:19px;height:19px;stroke:var(--wine);fill:none;stroke-width:1.6;cursor:pointer}
+  .bellwrap{position:relative;cursor:pointer;display:flex}
+  .bellbadge{position:absolute;top:-6px;right:-7px;background:#D14545;color:#fff;font-size:9.5px;font-weight:600;
+    min-width:15px;height:15px;border-radius:20px;display:flex;align-items:center;justify-content:center;padding:0 3px}
 </style>
 </head>
 <body>
@@ -396,13 +413,19 @@
 <div class="app">
   <div class="mainicons">
     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-    <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+    <div class="bellwrap" onclick="go('amostras')">
+      <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+      <span class="bellbadge" id="bellBadge" style="display:none">0</span>
+    </div>
   </div>
   <div class="top" id="topbar">
     <div class="brand"><span class="u">UNIVERSO</span><span class="a">Creator</span><svg class="brand-spark" viewBox="0 0 24 24" fill="none"><path d="M12 2c0 5.5 3.3 8.8 8.8 8.8-5.5 0-8.8 3.3-8.8 8.8 0-5.5-3.3-8.8-8.8-8.8 5.5 0 8.8-3.3 8.8-8.8z" fill="currentColor"/></svg></div>
     <div class="icons">
-      <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+      <div class="bellwrap" onclick="go('amostras')">
+        <svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+        <span class="bellbadge" id="bellBadgeMobile" style="display:none">0</span>
+      </div>
+      <svg onclick="go('config')" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
     </div>
   </div>
 
@@ -449,6 +472,10 @@
         <button class="cbtn" onclick="bump('postados',1)">📲 <b>Postei +1</b></button>
         <button class="cbtn minus" onclick="bump('postados',-1)">–</button>
       </div>
+    </div>
+    <div class="card">
+      <div class="lbl">Atividade recente</div>
+      <div id="atividadeList"></div>
     </div>
   </section>
 
@@ -544,6 +571,15 @@
   <!-- AGENDA -->
   <section class="tab" id="tab-agenda">
     <div class="greet"><div><h2 style="color:var(--wine)">Agenda</h2><div class="sub">Prazos de marca puxados sozinhos + o que você adicionar.</div></div></div>
+    <div class="card">
+      <div class="calnav">
+        <button onclick="calMudarMes(-1)">‹</button>
+        <span id="calMesLabel" class="cap">—</span>
+        <button onclick="calMudarMes(1)">›</button>
+      </div>
+      <div id="calendarioGrid"></div>
+      <div id="calDiaDetalhe" class="calDiaDetalhe"></div>
+    </div>
     <div class="card">
       <div class="lbl">Prazos das marcas</div>
       <div id="agendaMarcas"></div>
@@ -776,7 +812,7 @@ const MAIS_SUB=['vid','lab','est','agenda','insp','recursos','config','perfis','
 
 let S={ dia:today(),goal:8,gravados:0,postados:0,tarefas:[],capturas:[],videos:[],capTipo:'ideia',
   marcas:[],projetos:[],estudos:[],lab:[],labStatus:'testando',agenda:[],bibFiltro:'hook',
-  inspiracoes:[],checklist:[],notas:[],perfis:[],amostras:[],openMarca:null,openProjeto:null,openPerfil:null };
+  inspiracoes:[],checklist:[],notas:[],perfis:[],amostras:[],atividades:[],openMarca:null,openProjeto:null,openPerfil:null };
 
 const MARCAS_DEFAULT=['Soliv','Zencial','Hidratei','Primarcial'];
 const PROJ_DEFAULT=[
@@ -884,7 +920,7 @@ async function handleLogout(){
 
 function seedDefaults(){
   if(S.dia!==today()){ S.dia=today(); S.gravados=0; S.postados=0; }
-  ['tarefas','capturas','videos','estudos','marcas','projetos','lab','agenda','inspiracoes','checklist','notas','perfis','amostras'].forEach(k=>{ if(!Array.isArray(S[k])) S[k]=[]; });
+  ['tarefas','capturas','videos','estudos','marcas','projetos','lab','agenda','inspiracoes','checklist','notas','perfis','amostras','atividades'].forEach(k=>{ if(!Array.isArray(S[k])) S[k]=[]; });
   if(!S.marcas.length) S.marcas=MARCAS_DEFAULT.map(n=>({id:uid(),nome:n,itens:[],prazo:''}));
   if(!S.projetos.length){
     S.projetos=PROJ_DEFAULT.map(p=>{
@@ -893,7 +929,7 @@ function seedDefaults(){
     });
   }
   if(!S.checklist.length) S.checklist=CHECKLIST_DEFAULT.map(t=>({id:uid(),txt:t,done:false}));
-  if(!S.perfis.length) S.perfis=PERFIS_DEFAULT.map(n=>({id:uid(),nome:n,seguidores:'',notas:''}));
+  if(!S.perfis.length) S.perfis=PERFIS_DEFAULT.map(n=>({id:uid(),nome:n,seguidores:'',notas:'',notasLog:[]}));
   if(!S.bibFiltro) S.bibFiltro='hook';
   if(!S.labStatus) S.labStatus='testando';
   S.openMarca=null; S.openProjeto=null; S.openPerfil=null;
@@ -997,6 +1033,7 @@ function comemorarMeta(k){
     msg.style.display='block';
     setTimeout(()=>{ msg.style.display='none'; },3500);
   }
+  logAtividade('🎉', k==='gravados' ? 'Bateu a meta de gravação' : 'Bateu a meta de postagem');
 }
 function setGoal(v){ S.goal=Math.max(1,+v||8); renderCount(); save(); }
 function renderCount(){
@@ -1044,7 +1081,7 @@ function bumpTask(id){
   if(t.count>=t.meta){ t.count=t.meta; t.done=true; }
   renderTasks(); save();
 }
-function toggleTask(id){const t=S.tarefas.find(x=>x.id===id);if(t){t.done=!t.done; t.count=t.done?(t.meta||1):0;}renderTasks();save();}
+function toggleTask(id){const t=S.tarefas.find(x=>x.id===id);if(t){t.done=!t.done; t.count=t.done?(t.meta||1):0; if(t.done) logAtividade('✅',`Concluiu: ${t.txt}`);}renderTasks();save();}
 function delTask(id){S.tarefas=S.tarefas.filter(x=>x.id!==id);renderTasks();save();}
 
 /* MODO FOCO (tela cheia) */
@@ -1242,10 +1279,17 @@ function addAmostra(){
   amNome.value=''; amRecebido.value=''; amPrazo.value='';
   renderAmostras(); save();
 }
-function setAmostraStatus(id,st){ const a=S.amostras.find(x=>x.id===id); if(a)a.status=st; renderAmostras(); save(); }
+function setAmostraStatus(id,st){ const a=S.amostras.find(x=>x.id===id); if(a){ a.status=st; if(st==='postado') logAtividade('📦',`Postou amostra: ${a.nome}`); } renderAmostras(); save(); }
 function delAmostra(id){ S.amostras=S.amostras.filter(x=>x.id!==id); renderAmostras(); save(); }
 const AM_STATUS_LABEL={recebido:'📦 Recebido',gravado:'🎥 Gravado',postado:'✅ Postado'};
 function renderAmostras(){
+  const pendentesTodas=S.amostras.filter(a=>a.status!=='postado');
+  const urgentesTodas=pendentesTodas.map(a=>({a,dias:diasAte(a.prazo)})).filter(x=>x.dias!==null && x.dias<=3);
+  const n=urgentesTodas.length;
+  ['bellBadge','bellBadgeMobile'].forEach(idEl=>{
+    const b=document.getElementById(idEl);
+    if(b){ b.textContent=n>9?'9+':n; b.style.display=n>0?'flex':'none'; }
+  });
   const el=document.getElementById('amostrasList'); if(!el)return;
   const pendentes=S.amostras.filter(a=>a.status!=='postado');
   const urgentes=pendentes.map(a=>({a,dias:diasAte(a.prazo)})).filter(x=>x.dias!==null && x.dias<=3);
@@ -1296,6 +1340,12 @@ function showPerfilDetail(){
   const topFmt=Object.entries(porFmt).sort((a,b)=>b[1]-a[1])[0];
   const ultimaData=vids.length? vids.map(v=>v.quando).filter(Boolean).sort().slice(-1)[0] : '';
   const vidsHtml=vids.length?vids.slice(0,8).map(v=>`<div class="item"><span class="badge">${esc(v.fmt)}</span><div class="ct">${esc(v.hook||'(sem hook)')}${v.res?' · '+esc(v.res):''}</div></div>`).join(''):`<div class="empty" style="padding:12px 0">Nenhum vídeo registrado ainda pra esse perfil.</div>`;
+  if(typeof pf.notas==='string' && pf.notas.trim() && (!pf.notasLog||!pf.notasLog.length)){
+    pf.notasLog=[{id:uid(),txt:pf.notas.trim(),quando:new Date().toISOString()}];
+    pf.notas='';
+  }
+  if(!Array.isArray(pf.notasLog)) pf.notasLog=[];
+  const notasHtml=pf.notasLog.length?pf.notasLog.slice().reverse().map(n=>`<div class="item"><div class="ct">${esc(n.txt)}<div style="font-size:11px;color:var(--muted);margin-top:4px">${formatTimestamp(n.quando)}</div></div><div class="x" onclick="delPerfilNota('${pf.id}','${n.id}')">×</div></div>`).join(''):`<div class="empty" style="padding:12px 0">Nada anotado ainda.</div>`;
   perfilDetail.innerHTML=`
     <button class="back" onclick="closePerfil()">‹ Perfis</button>
     <div class="dhead">${esc(pf.nome)}</div>
@@ -1312,8 +1362,10 @@ function showPerfilDetail(){
       <input type="text" class="tin" value="${esc(pf.seguidores)}" placeholder="ex: 12.400" oninput="setPerfilCampo('${pf.id}','seguidores',this.value)">
     </div>
     <div class="card">
-      <div class="lbl">Notas / estratégia desse perfil <span id="perfilSaveStatus2" class="savestatus"></span></div>
-      <textarea placeholder="pra que serve esse perfil, o que testar, público..." oninput="setPerfilCampo('${pf.id}','notas',this.value)">${esc(pf.notas)}</textarea>
+      <div class="lbl">Notas / estratégia desse perfil</div>
+      <textarea id="notaPerfilTxt" placeholder="pra que serve esse perfil, o que testar, público..."></textarea>
+      <button class="save" onclick="addPerfilNota('${pf.id}')">Guardar nota</button>
+      <div style="margin-top:10px">${notasHtml}</div>
     </div>
     <div class="card"><div class="lbl">Vídeos desse perfil</div>${vidsHtml}</div>
     <button class="bigbtn ghost" onclick="delPerfil('${pf.id}')" style="color:#B5595E;border-color:#F0D6D6">Remover este perfil</button>`;
@@ -1333,6 +1385,42 @@ async function setPerfilCampo(id,campo,v){
     await save();
     setSaveStatusAll('✓ salvo','salvo');
   },500);
+}
+function formatTimestamp(iso){
+  if(!iso) return '';
+  const d=new Date(iso); if(isNaN(d.getTime())) return '';
+  const agora=new Date();
+  const diffMin=Math.round((agora-d)/60000);
+  if(diffMin<1) return 'agora';
+  if(diffMin<60) return `há ${diffMin} min`;
+  const mesmodia=d.toDateString()===agora.toDateString();
+  const hora=d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  if(mesmodia) return `hoje às ${hora}`;
+  return `${d.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'})} às ${hora}`;
+}
+function logAtividade(icone,texto){
+  if(!Array.isArray(S.atividades)) S.atividades=[];
+  S.atividades.unshift({id:uid(),icone,texto,quando:new Date().toISOString()});
+  S.atividades=S.atividades.slice(0,30);
+  renderAtividades();
+}
+function renderAtividades(){
+  const el=document.getElementById('atividadeList'); if(!el)return;
+  const ultimas=S.atividades.slice(0,5);
+  el.innerHTML=ultimas.length?ultimas.map(a=>`<div class="arow"><span class="at">${a.icone} ${esc(a.texto)}</span><span class="ad">${formatTimestamp(a.quando)}</span></div>`).join(''):`<div class="empty" style="padding:10px 0">Suas ações vão aparecer aqui conforme você usa o app.</div>`;
+}
+function addPerfilNota(pfId){
+  const t=document.getElementById('notaPerfilTxt'); const v=t.value.trim(); if(!v)return;
+  const pf=S.perfis.find(x=>x.id===pfId); if(!pf)return;
+  if(!Array.isArray(pf.notasLog)) pf.notasLog=[];
+  pf.notasLog.push({id:uid(),txt:v,quando:new Date().toISOString()});
+  t.value='';
+  showPerfilDetail(); save();
+}
+function delPerfilNota(pfId,notaId){
+  const pf=S.perfis.find(x=>x.id===pfId); if(!pf)return;
+  pf.notasLog=(pf.notasLog||[]).filter(n=>n.id!==notaId);
+  showPerfilDetail(); save();
 }
 function delPerfil(id){
   if(!confirm('Remover esse perfil? Os vídeos já registrados continuam salvos, só o perfil em si some.'))return;
@@ -1386,8 +1474,10 @@ function refreshPerfilSelect(){
   if(cur)vPerfil.value=cur;
 }
 function addVid(){
-  S.videos.unshift({id:uid(),prod:vProd.value,fmt:vFmt.value,perfil:vPerfil.value,hook:vHook.value.trim(),res:vRes.value.trim(),pub:vPub.checked,quando:today()});
+  const prod=vProd.value, fmt=vFmt.value;
+  S.videos.unshift({id:uid(),prod,fmt,perfil:vPerfil.value,hook:vHook.value.trim(),res:vRes.value.trim(),pub:vPub.checked,quando:today()});
   vHook.value='';vRes.value='';renderVids();save();
+  logAtividade('🎥',`Registrou vídeo: ${prod} · ${fmt}`);
 }
 function delVid(id){S.videos=S.videos.filter(x=>x.id!==id);renderVids();save();}
 function renderVids(){
@@ -1443,6 +1533,7 @@ function renderEst(){
 }
 
 /* AGENDA */
+let calRefDate=new Date();
 function addAgenda(){
   const t=aTxt.value.trim(),dt=aDate.value.trim();if(!t)return;
   S.agenda.unshift({id:uid(),txt:t,data:dt});aTxt.value='';aDate.value='';renderAgenda();save();
@@ -1452,6 +1543,55 @@ function renderAgenda(){
   const comPrazo=S.marcas.filter(m=>m.prazo&&m.prazo.trim());
   agendaMarcas.innerHTML=comPrazo.length?comPrazo.map(m=>`<div class="arow"><span class="at">${esc(m.nome)}</span><span class="ad">⏳ ${esc(m.prazo)}</span></div>`).join(''):`<div class="empty" style="padding:12px 0">Nenhum prazo definido — defina em Marcas e ele aparece aqui sozinho.</div>`;
   agendaList.innerHTML=S.agenda.length?S.agenda.map(a=>`<div class="arow"><span class="at">${esc(a.txt)}</span><span class="ad">${a.data?esc(a.data):''}<span style="margin-left:8px;cursor:pointer" onclick="delAgenda('${a.id}')">×</span></span></div>`).join(''):`<div class="empty" style="padding:12px 0">Nada adicionado ainda.</div>`;
+  renderCalendario();
+}
+function calMudarMes(delta){
+  calRefDate=new Date(calRefDate.getFullYear(),calRefDate.getMonth()+delta,1);
+  renderCalendario();
+}
+function calEventosDoMes(ano,mes){
+  const mapa={};
+  function add(dateObj,tipo,texto){
+    if(!dateObj) return;
+    if(dateObj.getFullYear()!==ano||dateObj.getMonth()!==mes) return;
+    const key=dateObj.getDate();
+    if(!mapa[key]) mapa[key]=[];
+    mapa[key].push({tipo,texto});
+  }
+  S.agenda.forEach(a=>add(parseDataBR(a.data),'📌',a.txt));
+  S.marcas.forEach(m=>{ if(m.prazo) add(parseDataBR(m.prazo),'🏷️',`Prazo: ${m.nome}`); });
+  S.amostras.forEach(a=>{ if(a.status!=='postado' && a.prazo) add(parseDataBR(a.prazo),'📦',`Postar: ${a.nome}`); });
+  return mapa;
+}
+function renderCalendario(){
+  const grid=document.getElementById('calendarioGrid'); if(!grid)return;
+  const ano=calRefDate.getFullYear(), mes=calRefDate.getMonth();
+  const primeiroDiaSemana=new Date(ano,mes,1).getDay();
+  const diasNoMes=new Date(ano,mes+1,0).getDate();
+  const eventos=calEventosDoMes(ano,mes);
+  const hoje=new Date(); const hojeKey= hoje.getFullYear()===ano&&hoje.getMonth()===mes ? hoje.getDate() : null;
+  const dias=['D','S','T','Q','Q','S','S'];
+  let html=dias.map(d=>`<div class="calhead">${d}</div>`).join('');
+  for(let i=0;i<primeiroDiaSemana;i++) html+=`<div class="calday empty"></div>`;
+  for(let d=1; d<=diasNoMes; d++){
+    const isToday=d===hojeKey;
+    const hasEvent=eventos[d]&&eventos[d].length;
+    html+=`<div class="calday ${isToday?'today':''}" onclick="calMostrarDia(${ano},${mes},${d})">${d}${hasEvent?'<span class="caldot"></span>':''}</div>`;
+  }
+  grid.innerHTML=html;
+  const label=document.getElementById('calMesLabel');
+  if(label) label.textContent=calRefDate.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+  calMostrarDia(hoje.getFullYear(),hoje.getMonth(),hoje.getDate(),true);
+}
+function calMostrarDia(ano,mes,dia,silencioso){
+  const painel=document.getElementById('calDiaDetalhe'); if(!painel)return;
+  const eventos=calEventosDoMes(ano,mes)[dia]||[];
+  const label=new Date(ano,mes,dia).toLocaleDateString('pt-BR',{day:'2-digit',month:'long'});
+  if(!eventos.length){
+    painel.innerHTML=`<div class="empty" style="padding:6px 0">Nada em ${esc(label)}.</div>`;
+  } else {
+    painel.innerHTML=`<div class="lbl" style="margin-bottom:8px">${esc(label)}</div>`+eventos.map(e=>`<div class="irow"><span>${e.tipo} ${esc(e.texto)}</span></div>`).join('');
+  }
 }
 
 /* NAV */
@@ -1505,7 +1645,7 @@ function limparTudo(){
   S.marcas=MARCAS_DEFAULT.map(n=>({id:uid(),nome:n,itens:[],prazo:''}));
   S.projetos=PROJ_DEFAULT.map(p=>{ const m=S.marcas.find(x=>x.nome===p.marca); return {id:uid(),nome:p.nome,marcaId:m?m.id:'',status:p.status,itens:[]}; });
   S.checklist=CHECKLIST_DEFAULT.map(t=>({id:uid(),txt:t,done:false}));
-  S.perfis=PERFIS_DEFAULT.map(n=>({id:uid(),nome:n,seguidores:'',notas:''}));
+  S.perfis=PERFIS_DEFAULT.map(n=>({id:uid(),nome:n,seguidores:'',notas:'',notasLog:[]}));
   save(); renderAll(); go('hoje');
 }
 
@@ -1530,7 +1670,7 @@ function go(t){
 function renderAll(){
   header();renderCount();renderTasks();renderMarcaRows();renderProjRows();renderBibGrid();
   refreshProdSelect();refreshPerfilSelect();renderPerfilRows();renderVids();renderLab();renderEst();renderAgenda();
-  renderInsp();renderChecklist();renderNotas();refreshAmostraMarcaSelect();renderAmostras();
+  renderInsp();renderChecklist();renderNotas();refreshAmostraMarcaSelect();renderAmostras();renderAtividades();
 }
 boot();
 </script>
