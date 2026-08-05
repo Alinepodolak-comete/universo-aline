@@ -63,6 +63,9 @@
 
   .card{background:linear-gradient(165deg,#FFFFFF,var(--card));border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:var(--shadow);margin-top:16px}
   .card .lbl{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:12px}
+  .savestatus{text-transform:none;letter-spacing:normal;font-size:11px;font-weight:400;margin-left:6px}
+  .savestatus.salvando{color:var(--muted)}
+  .savestatus.salvo{color:var(--sage)}
 
   /* foco do dia (progresso) */
   .progwrap{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
@@ -1305,17 +1308,32 @@ function showPerfilDetail(){
       </div>
     </div>
     <div class="card">
-      <div class="lbl">Seguidores</div>
+      <div class="lbl">Seguidores <span id="perfilSaveStatus" class="savestatus"></span></div>
       <input type="text" class="tin" value="${esc(pf.seguidores)}" placeholder="ex: 12.400" oninput="setPerfilCampo('${pf.id}','seguidores',this.value)">
     </div>
     <div class="card">
-      <div class="lbl">Notas / estratégia desse perfil</div>
+      <div class="lbl">Notas / estratégia desse perfil <span id="perfilSaveStatus2" class="savestatus"></span></div>
       <textarea placeholder="pra que serve esse perfil, o que testar, público..." oninput="setPerfilCampo('${pf.id}','notas',this.value)">${esc(pf.notas)}</textarea>
     </div>
     <div class="card"><div class="lbl">Vídeos desse perfil</div>${vidsHtml}</div>
     <button class="bigbtn ghost" onclick="delPerfil('${pf.id}')" style="color:#B5595E;border-color:#F0D6D6">Remover este perfil</button>`;
 }
-function setPerfilCampo(id,campo,v){ const pf=S.perfis.find(x=>x.id===id); if(pf) pf[campo]=v; save(); }
+let _perfilSaveTimer=null;
+function setSaveStatusAll(txt,classe){
+  ['perfilSaveStatus','perfilSaveStatus2'].forEach(idEl=>{
+    const el=document.getElementById(idEl);
+    if(el){ el.textContent=txt; el.className='savestatus '+classe; }
+  });
+}
+async function setPerfilCampo(id,campo,v){
+  const pf=S.perfis.find(x=>x.id===id); if(pf) pf[campo]=v;
+  setSaveStatusAll('salvando...','salvando');
+  clearTimeout(_perfilSaveTimer);
+  _perfilSaveTimer=setTimeout(async ()=>{
+    await save();
+    setSaveStatusAll('✓ salvo','salvo');
+  },500);
+}
 function delPerfil(id){
   if(!confirm('Remover esse perfil? Os vídeos já registrados continuam salvos, só o perfil em si some.'))return;
   S.perfis=S.perfis.filter(x=>x.id!==id); refreshPerfilSelect(); closePerfil(); save();
