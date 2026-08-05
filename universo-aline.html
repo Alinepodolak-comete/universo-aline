@@ -10,13 +10,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
-    --bg:#F8E9DA;--card:#FFFCF7;--wine:#7A4A44;--wine-2:#93594E;--rose:#D9A08E;
-    --rose-soft:#F5E1D3;--gold:#C99A5B;--ink:#4A3833;--muted:#A0897E;--line:#EDDCC9;
-    --sage:#8FA890;--sage-soft:#E7F0E8;--lav:#8973A6;--lav-soft:#EDE7F3;--shadow:0 8px 26px rgba(122,74,68,.12);
+    --bg:#F8EFE1;--card:#FFFCF6;--wine:#8B6B52;--wine-2:#9F7F63;--rose:#E8B4B8;
+    --rose-soft:#F7E4E1;--gold:#C9A06B;--gold-soft:#F5E9D3;--ink:#5A4636;--muted:#A68F76;--line:#EDDFC9;
+    --sage:#9DB89D;--sage-soft:#E9F1E7;--lav:#9683A6;--lav-soft:#EFE7F3;--shadow:0 8px 26px rgba(139,107,82,.14);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0}
-  body{background:linear-gradient(180deg,#FBF1E5 0%,#F8E9DA 40%,#F5DFCB 100%);color:var(--ink);font-family:-apple-system,"Poppins",system-ui,sans-serif;
+  body{background:linear-gradient(180deg,#FCF6EC 0%,#F8EFE1 40%,#F3E4CC 100%);color:var(--ink);font-family:-apple-system,"Poppins",system-ui,sans-serif;
     font-weight:400;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh}
   .app{max-width:520px;margin:0 auto;min-height:100vh;padding:0 18px 112px;position:relative}
   h1,h2,h3{font-family:Georgia,"Fraunces",serif;font-weight:400;margin:0;letter-spacing:.01em}
@@ -99,6 +99,19 @@
   .countbox.sagebox{background:linear-gradient(160deg,#EEF5EF,var(--sage-soft))}
   .countbox.rosebox{background:linear-gradient(160deg,#FBEEF0,var(--rose-soft))}
   .countbox.bateu{animation:pulseGold 1.8s ease}
+  .stat4grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
+  .stat4card{border-radius:16px;padding:14px 13px}
+  .stat4card.c-lav{background:var(--lav-soft)}
+  .stat4card.c-rose{background:var(--rose-soft)}
+  .stat4card.c-sage{background:var(--sage-soft)}
+  .stat4card.c-gold{background:var(--gold-soft)}
+  .s4ic{font-size:16px;margin-bottom:8px}
+  .s4num{font-family:Georgia,serif;font-size:23px;line-height:1}
+  .stat4card.c-lav .s4num{color:var(--lav)}
+  .stat4card.c-rose .s4num{color:var(--rose)}
+  .stat4card.c-sage .s4num{color:var(--sage)}
+  .stat4card.c-gold .s4num{color:var(--gold)}
+  .s4lbl{font-size:10.5px;color:var(--muted);margin-top:3px}
   .countbox.bateu .big{color:var(--gold)}
   @keyframes pulseGold{0%{box-shadow:0 0 0 0 rgba(190,154,79,.5)}70%{box-shadow:0 0 0 12px rgba(190,154,79,0)}100%{box-shadow:0 0 0 0 rgba(190,154,79,0)}}
   .metamsg{background:#FBEFDB;color:#A9862F;font-size:12.5px;font-weight:500;padding:9px 13px;border-radius:11px;margin-bottom:12px;text-align:center}
@@ -435,6 +448,12 @@
 
     <div class="weekstrip" id="weekstrip"></div>
     <div class="daynote" id="daynote" style="display:none"></div>
+    <div class="stat4grid">
+      <div class="stat4card c-lav"><div class="s4ic">✅</div><div class="s4num" id="s4tarefas">0</div><div class="s4lbl">Tarefas feitas</div></div>
+      <div class="stat4card c-rose"><div class="s4ic">🎥</div><div class="s4num" id="s4grav">0</div><div class="s4lbl">Gravados</div></div>
+      <div class="stat4card c-sage"><div class="s4ic">📲</div><div class="s4num" id="s4post">0</div><div class="s4lbl">Postados</div></div>
+      <div class="stat4card c-gold"><div class="s4ic">⭐</div><div class="s4num" id="s4pct">0%</div><div class="s4lbl">Da meta</div></div>
+    </div>
 
     <div class="card">
       <div class="focotabs">
@@ -1042,12 +1061,16 @@ function renderCount(){
   const goalCfgEl=document.getElementById('goalCfg'); if(goalCfgEl) goalCfgEl.value=S.goal;
   barg.style.width=Math.min(100,(S.gravados/S.goal)*100)+'%';
   barp.style.width=Math.min(100,(S.postados/S.goal)*100)+'%';
+  const s4g=document.getElementById('s4grav'); if(s4g) s4g.textContent=S.gravados||0;
+  const s4p=document.getElementById('s4post'); if(s4p) s4p.textContent=S.postados||0;
+  const s4pct=document.getElementById('s4pct'); if(s4pct){ const media=((S.gravados||0)+(S.postados||0))/2; s4pct.textContent=Math.round(Math.min(100,(media/S.goal)*100))+'%'; }
 }
 function renderTasks(){
   const done=S.tarefas.filter(t=>t.done).length, tot=S.tarefas.length;
   fracTxt.textContent=`${done}/${tot} tarefa${tot!==1?'s':''} concluída${tot!==1?'s':''}`;
   pctTxt.textContent = tot ? `${Math.round(done/tot*100)}%` : '';
   barFoco.style.width=(tot?done/tot*100:0)+'%';
+  const s4t=document.getElementById('s4tarefas'); if(s4t) s4t.textContent=done;
   const frases=['Um dia de cada vez. Você está construindo algo incrível.','Feito é melhor que perfeito. 🌸','Respira. Uma tarefa por vez.'];
   encourTxt.textContent = tot && done===tot ? 'Você fechou tudo hoje. Orgulho. 🤍' : frases[0];
 
