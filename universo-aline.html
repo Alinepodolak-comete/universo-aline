@@ -317,8 +317,12 @@
     .sidebar .sbrand{display:flex;flex-direction:column;margin-bottom:6px;position:relative}
     .sidebar .brand-spark{color:#F4D9A0;right:auto;left:78px;top:-1px}
     .sprofile{display:flex;align-items:center;gap:11px;margin-bottom:20px}
+    .savatar-wrap{position:relative;width:38px;height:38px;flex:none;cursor:pointer;display:block}
     .savatar{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;
       justify-content:center;font-family:Georgia,serif;font-size:16px;color:#fff;flex:none}
+    .savatar-img{width:38px;height:38px;border-radius:50%;object-fit:cover;position:absolute;top:0;left:0}
+    .savatar-edit{position:absolute;bottom:-3px;right:-3px;width:16px;height:16px;border-radius:50%;background:var(--wine-2);
+      border:1.5px solid var(--wine);display:flex;align-items:center;justify-content:center;font-size:8px;line-height:1}
     .spname{font-size:13.5px;font-weight:500;color:#fff;line-height:1.3}
     .spname span{display:block;font-size:10.5px;font-weight:400;color:rgba(255,255,255,.6);margin-top:1px}
     .sidebar .sbrand .u{font-size:10px;letter-spacing:.35em;color:#E6C98F}
@@ -359,9 +363,14 @@
 <div id="appRoot" style="display:none">
 <div class="sidebar">
   <div class="sprofile">
+  <label class="savatar-wrap">
     <div class="savatar" id="savatarLetter">C</div>
-    <div class="spname" id="spnameText">Creator<span>bem-vinda de volta</span></div>
-  </div>
+    <img class="savatar-img" id="savatarImg" style="display:none">
+    <span class="savatar-edit">📷</span>
+    <input type="file" accept="image/*" style="display:none" onchange="handleProfilePhoto(this)">
+  </label>
+  <div class="spname" id="spnameText">Creator<span>bem-vinda de volta</span></div>
+</div>
   <div class="sbrand"><span class="u">UNIVERSO</span><span class="a">Creator</span><svg class="brand-spark" viewBox="0 0 24 24" fill="none"><path d="M12 2c0 5.5 3.3 8.8 8.8 8.8-5.5 0-8.8 3.3-8.8 8.8 0-5.5-3.3-8.8-8.8-8.8 5.5 0 8.8-3.3 8.8-8.8z" fill="currentColor"/></svg></div>
   <div class="stag">Sua central de criação</div>
   <div class="snav" id="snav">
@@ -841,12 +850,30 @@ async function afterAuth(user){
     if(data && data.data){ S=Object.assign(S,data.data); }
   }catch(e){}
   seedDefaults();
+  renderProfilePhoto();
   renderAll();
+}
+function renderProfilePhoto(){
+  if(S.perfilFoto){ savatarImg.src=S.perfilFoto; savatarImg.style.display='block'; savatarLetter.style.display='none'; }
+  else { savatarImg.style.display='none'; savatarLetter.style.display='flex'; }
+}
+async function handleProfilePhoto(inputEl){
+  const file=inputEl.files[0]; if(!file) return;
+  try{
+    const dataUrl=await compressImage(file,300,0.7);
+    S.perfilFoto=dataUrl;
+    renderProfilePhoto();
+    save();
+  }catch(e){
+    alert('Não consegui processar essa foto.');
+  }
+  inputEl.value='';
 }
 async function handleLogout(){
   if(!confirm('Sair da conta?'))return;
   await sbClient.auth.signOut();
   currentUserId=null; currentUserName='';
+  savatarImg.style.display='none'; savatarLetter.style.display='flex'; savatarLetter.textContent='C';
   appRoot.style.display='none';
   authscreen.style.display='flex';
   authEmail.value=''; authPass.value=''; authMsg.style.display='none';
