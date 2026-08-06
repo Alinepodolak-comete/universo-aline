@@ -122,8 +122,7 @@
     .hoje-grid{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:start}
     .hoje-main,.hoje-side{min-width:0}
   }
-  .calgrid.mini .calday{cursor:default;padding:6px 0;font-size:11.5px}
-  .calgrid.mini .calday:hover{background:none}
+  .calgrid.mini .calday{padding:6px 0;font-size:11.5px}
   .countbox.bateu .big{color:var(--gold)}
   @keyframes pulseGold{0%{box-shadow:0 0 0 0 rgba(190,154,79,.5)}70%{box-shadow:0 0 0 12px rgba(190,154,79,0)}100%{box-shadow:0 0 0 0 rgba(190,154,79,0)}}
   .metamsg{background:#FBEFDB;color:#A9862F;font-size:12.5px;font-weight:500;padding:9px 13px;border-radius:11px;margin-bottom:12px;text-align:center}
@@ -1638,11 +1637,15 @@ function renderCalendarioMini(ano,mes,primeiroDiaSemana,diasNoMes,eventos,hojeKe
   for(let d=1; d<=diasNoMes; d++){
     const isToday=d===hojeKey;
     const hasEvent=eventos[d]&&eventos[d].length;
-    html+=`<div class="calday ${isToday?'today':''}">${d}${hasEvent?'<span class="caldot"></span>':''}</div>`;
+    html+=`<div class="calday ${isToday?'today':''}" onclick="calMiniClick(${ano},${mes},${d})">${d}${hasEvent?'<span class="caldot"></span>':''}</div>`;
   }
   mini.innerHTML=html;
   const lbl=document.getElementById('calendarioMiniLabel');
   if(lbl) lbl.textContent=new Date(ano,mes,1).toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+}
+function calMiniClick(ano,mes,dia){
+  go('agenda');
+  calMostrarDia(ano,mes,dia);
 }
 function calMostrarDia(ano,mes,dia,silencioso){
   const painel=document.getElementById('calDiaDetalhe'); if(!painel)return;
