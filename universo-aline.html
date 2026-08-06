@@ -105,7 +105,11 @@
   .stat4card.c-rose{background:var(--rose-soft)}
   .stat4card.c-sage{background:var(--sage-soft)}
   .stat4card.c-gold{background:var(--gold-soft)}
-  .s4ic{font-size:16px;margin-bottom:8px}
+  .s4ic{font-size:15px;margin-bottom:8px;width:28px;height:28px;border-radius:9px;display:flex;align-items:center;justify-content:center}
+  .s4ic-lav{background:#DCCCE6}
+  .s4ic-rose{background:#F0C7CA}
+  .s4ic-sage{background:#C9DDC9}
+  .s4ic-gold{background:#EBD7A9}
   .s4num{font-family:Georgia,serif;font-size:23px;line-height:1}
   .stat4card.c-lav .s4num{color:var(--lav)}
   .stat4card.c-rose .s4num{color:var(--rose)}
@@ -456,13 +460,11 @@
 
     <div class="hoje-grid">
       <div class="hoje-main">
-        <div class="weekstrip" id="weekstrip"></div>
-        <div class="daynote" id="daynote" style="display:none"></div>
         <div class="stat4grid">
-          <div class="stat4card c-lav"><div class="s4ic">✅</div><div class="s4num" id="s4tarefas">0</div><div class="s4lbl">Tarefas feitas</div></div>
-          <div class="stat4card c-rose"><div class="s4ic">🎥</div><div class="s4num" id="s4grav">0</div><div class="s4lbl">Gravados</div></div>
-          <div class="stat4card c-sage"><div class="s4ic">📲</div><div class="s4num" id="s4post">0</div><div class="s4lbl">Postados</div></div>
-          <div class="stat4card c-gold"><div class="s4ic">⭐</div><div class="s4num" id="s4pct">0%</div><div class="s4lbl">Da meta</div></div>
+          <div class="stat4card c-lav"><div class="s4ic s4ic-lav">✅</div><div class="s4num" id="s4tarefas">0</div><div class="s4lbl">Tarefas feitas</div></div>
+          <div class="stat4card c-rose"><div class="s4ic s4ic-rose">🎥</div><div class="s4num" id="s4grav">0</div><div class="s4lbl">Gravados</div></div>
+          <div class="stat4card c-sage"><div class="s4ic s4ic-sage">📲</div><div class="s4num" id="s4post">0</div><div class="s4lbl">Postados</div></div>
+          <div class="stat4card c-gold"><div class="s4ic s4ic-gold">⭐</div><div class="s4num" id="s4pct">0%</div><div class="s4lbl">Da meta</div></div>
         </div>
 
         <div class="card">
@@ -1450,7 +1452,8 @@ function logAtividade(icone,texto){
 function renderAtividades(){
   const el=document.getElementById('atividadeList'); if(!el)return;
   const ultimas=S.atividades.slice(0,5);
-  el.innerHTML=ultimas.length?ultimas.map(a=>`<div class="arow"><span class="at">${a.icone} ${esc(a.texto)}</span><span class="ad">${formatTimestamp(a.quando)}</span></div>`).join(''):`<div class="empty" style="padding:10px 0">Suas ações vão aparecer aqui conforme você usa o app.</div>`;
+  const cores=['s4ic-lav','s4ic-rose','s4ic-sage','s4ic-gold'];
+  el.innerHTML=ultimas.length?ultimas.map((a,i)=>`<div class="arow"><span class="at"><span class="s4ic ${cores[i%4]}" style="width:22px;height:22px;font-size:12px;display:inline-flex;margin-right:8px;vertical-align:middle">${a.icone}</span>${esc(a.texto)}</span><span class="ad">${formatTimestamp(a.quando)}</span></div>`).join(''):`<div class="empty" style="padding:10px 0">Suas ações vão aparecer aqui conforme você usa o app.</div>`;
 }
 function addPerfilNota(pfId){
   const t=document.getElementById('notaPerfilTxt'); const v=t.value.trim(); if(!v)return;
